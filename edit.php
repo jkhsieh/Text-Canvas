@@ -33,9 +33,12 @@
 <form id="canvasForm" method="post" action="save.php">
     <input type="hidden" name="id" value="<?php print($id); ?>">
     <!-- stringify => textarea => eval. save. -->
-	<input id="stringifyBtn" type="button" value="stringify =>" onclick="doodle.stringifyHistory();"></input>
-	<textarea id="jsonTextarea" name="jsonTextarea" cols="80" rows="10"><?php print($json); ?></textarea>
-	<input id="evalBtn" type="button" value="=> eval" onclick="doodle.evalHistoryJson();"></input>
+	<input id="stringifyBtn" type="button" value="stringify =>"
+	 onclick="doodle.stringifyHistory();"></input>
+	<textarea id="jsonTextarea" name="jsonTextarea" cols="80" rows="10">
+	    <?php print($json); ?></textarea>
+	<input id="evalBtn" type="button" value="=> eval"
+	 onclick="doodle.evalHistoryJson();"></input>
 	<br>
 	<input type="submit" value="save"></input>
 </form>
@@ -45,7 +48,9 @@
     print("    var doodle;\n");
     print("    $(document).ready(\n");
     print("    function() {\n");
-    print("        doodle = new Doodle('canvas".$id."', eval('(' +'".$json."'+ ')'));\n");
+    print("        doodle = new Doodle('canvas".$id."', 
+                                    eval('(' +'".$json."'+ ')'), 
+                                    true);\n");
     print("    });\n");
     print("</script>");
 ?>

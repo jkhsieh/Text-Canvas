@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-Doodle = function (doodleRID, history) {
+Doodle = function (doodleRID, history, editMode) {
 
 var canvas;
 var context;
@@ -103,15 +103,18 @@ var prepareCanvas = function(doodleRID)
 	canvas.setAttribute('height', canvasHeight);
 	canvas.setAttribute('id', doodleRID);   //
 	
+	evalHistoryJson();
+	
+	//rating
 	editDiv.appendChild(canvas);
 	canvasDiv.appendChild(editDiv);
-	//editDiv.innerHTML += " ***** <a href='edit.php?id="+doodleRID+"'>edit</a>";
-	
 	var link = document.createElement('a');
 	link.setAttribute('href', "");
 	link.innerHTML = "*****";
 	editDiv.appendChild(link);
 	
+	//give edit-link if in display mode
+  if(editMode == false) {
 	//editDiv.innerHTML += " ";     //why does this break canvas??
 	var span = document.createElement('span');
 	span.innerHTML = " ";
@@ -121,8 +124,7 @@ var prepareCanvas = function(doodleRID)
 	link.setAttribute('href', "edit.php?id="+doodleRID);
 	link.innerHTML = "edit";
 	editDiv.appendChild(link);
-	
-	evalHistoryJson();
+  }
 	
 	
 	if(typeof G_vmlCanvasManager != 'undefined') {
@@ -171,6 +173,7 @@ var prepareCanvas = function(doodleRID)
 
 	// Add mouse events
 	// ----------------
+  if(editMode) {
 	$('#'+doodleRID).mousedown(function(e)
 	{
 		// Mouse down location
@@ -249,7 +252,8 @@ var prepareCanvas = function(doodleRID)
 		paint = false;
 	});
 	
-    //end events	
+    //end events
+  } //editMode
 }
 
 prepareCanvas(doodleRID);
@@ -580,6 +584,8 @@ function stringifyHistory() {
 }//Doodle
 
 
+
+
 /**/
 //modified from example on http://www.captain.at/howto-ajax-process-xml.php
 
@@ -591,61 +597,9 @@ function getDoodles(url) {   //returns HTML (external source)
             //get url doodles array, eval, add doodles
             doodles = (eval('(' + result + ')')).doodles;     //eval DANGER!!
             for(i = 0; i<doodles.length; i++){
-                new Doodle(doodles[i].id, doodles[i].history);
+                new Doodle(doodles[i].id, doodles[i].history, false);
             }
         }
     });
-    /*
-    http_request = false;
-    
-    if(window.XMLHttpRequest) { //Mozilla, Safari, etc.
-        http_request = new XMLHttpRequest();
-        if(http_request.overrideMimeType) {
-            http_request.overrideMimeType('text/xml');
-        }
-    } else if(window.ActiveXObject) {   //IE
-        try {
-            http_request = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch(e) {
-            try {
-                http_request = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch(e) { }
-        }
-    }
-    
-    if(!http_request) {
-        alert('Cannot create XMLHTTP instance. Abort getDoodles().');
-        return false;
-    }
-    
-    //parse params?
-    
-    http_request.onreadystatechange = alertContents;    //callback
-    http_request.open('GET', url, true);
-    http_request.send(null);
-    */
 }//function getDoodles
-
-/**/
-function alertContents() {
-    if (http_request.readyState == 4) {     //http DONE
-        if (http_request.status == 200) {   //OK
-            
-            //get url doodles array, eval, add doodles
-            doodles = eval('(' + http_request.responseText + ')');  //DANGERous way!!
-            for(i = 0; i<doodles.length; i++){
-                addDoodle("canvasDiv", i, doodles[i].id, doodles[i].history);
-            }
-            
-            
-        } else {
-            alert('There was a problem with the request.');
-        }
-    }
-}//function alertContents
-
-/**/
-function addDoodle(doodleRID, doodleHistory) {
-    new Doodle("canvas"+doodleRID, doodleHistory);
-}
 
