@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-Doodle = function (domID, history) {
+Doodle = function (doodleRID, history) {
 
 var canvas;
 var context;
@@ -91,21 +91,47 @@ var evalHistoryJson = function() {
 /**
 * Creates a canvas element, loads images, adds events, and draws the canvas for the first time.
 */
-var prepareCanvas = function(domID)
+var prepareCanvas = function(doodleRID)
 {
+    //nest into DOM canvasDiv > editDiv > canvas, link ...
+    var editDiv = document.createElement('div');
+	
 	// Create the canvas (Neccessary for IE because it doesn't know what a canvas element is)
 	var canvasDiv = document.getElementById('canvasDiv');
 	canvas = document.createElement('canvas');
 	canvas.setAttribute('width', canvasWidth);
 	canvas.setAttribute('height', canvasHeight);
-	canvas.setAttribute('id', domID);   //
-	canvasDiv.appendChild(canvas);
+	canvas.setAttribute('id', doodleRID);   //
+	
+	editDiv.appendChild(canvas);
+	canvasDiv.appendChild(editDiv);
+	//editDiv.innerHTML += " ***** <a href='edit.php?id="+doodleRID+"'>edit</a>";
+	
+	var link = document.createElement('a');
+	link.setAttribute('href', "");
+	link.innerHTML = "*****";
+	editDiv.appendChild(link);
+	
+	//editDiv.innerHTML += " ";     //why does this break canvas??
+	var span = document.createElement('span');
+	span.innerHTML = " ";
+	editDiv.appendChild(span);
+	
+	link = document.createElement('a');
+	link.setAttribute('href', "edit.php?id="+doodleRID);
+	link.innerHTML = "edit";
+	editDiv.appendChild(link);
+	
+	evalHistoryJson();
+	
+	
 	if(typeof G_vmlCanvasManager != 'undefined') {
 		canvas = G_vmlCanvasManager.initElement(canvas);
 	}
 	context = canvas.getContext("2d"); // Grab the 2d canvas context
 	// Note: The above code is a workaround for IE 8 and lower. Otherwise we could have used:
 	//     context = document.getElementById('canvas').getContext("2d");
+	
 	
 	// Load images
 	// -----------
@@ -142,9 +168,10 @@ var prepareCanvas = function(domID)
 	}
 	outlineImage.src = "images/watermelon-duck-outline.png";
 
+
 	// Add mouse events
 	// ----------------
-	$('#'+domID).mousedown(function(e)
+	$('#'+doodleRID).mousedown(function(e)
 	{
 		// Mouse down location
 		var mouseX = e.pageX - this.offsetLeft;
@@ -206,27 +233,26 @@ var prepareCanvas = function(domID)
 		redraw();
 	});
 	
-	$('#'+domID).mousemove(function(e){
+	$('#'+doodleRID).mousemove(function(e){
 		if(paint==true){
 			addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
 			redraw();
 		}
 	});
 	
-	$('#'+domID).mouseup(function(e){
+	$('#'+doodleRID).mouseup(function(e){
 		paint = false;
 	  	redraw();
 	});
 	
-	$('#'+domID).mouseleave(function(e){
+	$('#'+doodleRID).mouseleave(function(e){
 		paint = false;
 	});
 	
-	evalHistoryJson();
-	
+    //end events	
 }
 
-prepareCanvas(domID);
+prepareCanvas(doodleRID);
 
 
 /**
@@ -565,7 +591,7 @@ function getDoodles(url) {   //returns HTML (external source)
             //get url doodles array, eval, add doodles
             doodles = (eval('(' + result + ')')).doodles;     //eval DANGER!!
             for(i = 0; i<doodles.length; i++){
-                new Doodle("canvas"+doodles[i].id, doodles[i].history);
+                new Doodle(doodles[i].id, doodles[i].history);
             }
         }
     });
