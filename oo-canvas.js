@@ -577,12 +577,31 @@ function stringifyHistory() {
 	history.clickSize = clickSize;
 	history.clickDrag = clickDrag;
 	
-	var jsonTextarea = document.getElementById("jsonTextarea");
-	jsonTextarea.value = JSON.stringify(history);
+	//var jsonTextarea = document.getElementById("jsonTextarea");
+	//jsonTextarea.value = JSON.stringify(history);
+	return JSON.stringify(history);
 }
 
 }//Doodle
 
+
+/**/
+function alertContents() {
+    if (http_request.readyState == 4) { //http DONE
+        if (http_request.status == 200) { //OK
+            
+            //get url doodles array, eval, add doodles
+            doodles = eval('(' + http_request.responseText + ')'); //DANGERous way!!
+            for(i = 0; i<doodles.length; i++){
+                addDoodle("canvasDiv", i, doodles[i].id, doodles[i].history);
+            }
+            
+            
+        } else {
+            alert('There was a problem with the request.');
+        }
+    }
+}//function alertContents
 
 
 

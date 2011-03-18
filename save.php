@@ -22,9 +22,9 @@ if ($records) {
     NEED VALIDIFY!!
 */
 if($id == "new")
-    $statement = "INSERT INTO doodles(json) VALUES ('".$json."')";
+    $statement = "INSERT INTO doodles(json, modified) VALUES ('".$json."', current_timestamp)";
 else
-    $statement = "UPDATE doodles SET json = '".$json."' WHERE id = ".$id;
+    $statement = "UPDATE doodles SET json = '".$json."', modified = current_timestamp WHERE id = ".$id;
 $result = mysql_query($statement);
 
 if($result == true) print "<br>\r<br>\r" . "Canvas doodle saved.";
