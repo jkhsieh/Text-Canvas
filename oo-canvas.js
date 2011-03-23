@@ -178,7 +178,7 @@ var prepareCanvas = function(doodleRID, history)
 	
 	outlineImage.onload = function() { resourceLoaded(); 
 	}
-	outlineImage.src = "images/watermelon-duck-outline.png";
+	outlineImage.src = "images/outline.png";
 
 
 	// Add mouse events
