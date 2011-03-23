@@ -2,7 +2,7 @@
 //get json string
 foreach($_POST as $key=>$val)
 {
-    if($key == "jsonTextarea") $json = htmlentities($val);  //need undo on read
+    if($key == "json") $json = htmlentities($val);  //need undo on read
     //print $json;
     if($key == "id") $id = $val;
 }

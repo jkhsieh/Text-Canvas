@@ -17,40 +17,36 @@
         if($key == 'id') $id = $value;
     }
     print "id = ".$id;
-    if(!isset($id)) exit("Specify doodle id or 'new'!");
+    if(!isset($id)) exit("Specify doodle id to edit!");
     
     $db = mysql_connect("localhost", "jkhsieh", "tc_inspir");
     if(!$db) exit(mysql_error());
 
     $db_ok = mysql_select_db("textcanvas");
 
+    /*
     $statement = "SELECT json FROM doodles where id=".$id;   //case sensitive!
-
     $result = mysql_query($statement);
     $arr = mysql_fetch_row($result);  //row[]
     $json = html_entity_decode($arr[0]);
+    */
 ?>
 <form id="canvasForm" method="post" action="save.php"
     onsubmit="return saveDoodle();">
     <input type="hidden" name="id" value="<?php print($id); ?>">
-    <!-- stringify => textarea => eval. save. -->
-	<input id="stringifyBtn" type="button" value="stringify =>"
-	 onclick="stringifyHistory();"></input>
-	<textarea id="jsonTextarea" name="jsonTextarea" cols="80" rows="10">
-	    <?php print($json); ?></textarea>
-	<input id="evalBtn" type="button" value="=> eval"
-	 onclick="doodle.evalHistoryJson();"></input>
-	<br>
-	<input type="submit" value="save doodle"></input>
+    <input type="hidden" name="json" id="json" value="">
+    <input type="submit" value="save doodle"></input>
 </form>
 
-<?php    //cannot have php within script, but can output script w/ php:
+<script type='text/javascript'>
+    var doodles = new Array();  //holds histories. no handle on Doodle!
+</script>
+<?php
     print("<script type='text/javascript'>\n");
     print("    var id = ".$id.";");
     print("</script>");
 ?>
 <script type='text/javascript'>
-    var doodles;
     $(document).ready(
         function() {
             getDoodle("selectJson.php?id="+id);
@@ -74,11 +70,9 @@
         });
     }//function getDoodles
     
-</script>
-<script>
     function stringifyHistory() {
-        var jsonTextarea = document.getElementById("jsonTextarea");
-	    jsonTextarea.value = JSON.stringify(doodles[0].history);    //id not used!!!
+        var jsonHolder = document.getElementById("json");
+	    jsonHolder.value = JSON.stringify(doodles[0].history);    //id not used!!!
     }
     
     function saveDoodle() {

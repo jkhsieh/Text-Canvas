@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML5 Create HTML5 Canvas JavaScript Drawing App Example</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
+<script type="text/javascript" src="oo-canvas.js"></script>
+</head>
+
+<body>
+
+<!-- canvas tags to be created in div -->
+<div id="canvasDiv"></div>
+
+<form id="canvasForm" method="post" action="save.php"
+    onsubmit="return saveDoodle();">
+    <input type="hidden" name="id" value="new">
+    <input type="hidden" name="json" id="json" value="">
+	<input type="submit" value="save doodle"></input>
+</form>
+
+<script type='text/javascript'>
+    var doodles = new Array();
+    doodles[0] = {"id": "", "history": new Object()};
+    new Doodle("newID", doodles[0].history, true);
+    
+    function stringifyHistory() {
+        var jsonHolder = document.getElementById("json");
+	    jsonHolder.value = JSON.stringify(doodles[0].history);    //id not used!!!
+    }
+    
+    function saveDoodle() {
+        stringifyHistory();
+        return true;
+    }
+</script>
+
+</body>
+</html>

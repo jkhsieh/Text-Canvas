@@ -34,6 +34,7 @@ var markerBackgroundImage = new Image();
 var eraserBackgroundImage = new Image();
 var crayonTextureImage = new Image();
 
+var dHistory;
 var clickX = new Array();
 var clickY = new Array();
 var clickColor = new Array();
@@ -78,20 +79,28 @@ function resourceLoaded()
 
 
 var evalHistoryJson = function() {
-    clickX = history.clickX;
-	clickY = history.clickY;
-	clickTool = history.clickTool;
-	clickColor = history.clickColor;
-	clickSize = history.clickSize;
-	clickDrag = history.clickDrag;
-	
+    if(dHistory.clickX == null) {
+        dHistory.clickX = clickX;
+        dHistory.clickY = clickY;
+        dHistory.clickTool = clickTool;
+        dHistory.clickColor = clickColor;
+        dHistory.clickSize = clickSize;
+        dHistory.clickDrag = clickDrag;
+    } else {
+        clickX = dHistory.clickX;
+        clickY = dHistory.clickY;
+        clickTool = dHistory.clickTool;
+        clickColor = dHistory.clickColor;
+        clickSize = dHistory.clickSize;
+        clickDrag = dHistory.clickDrag;
+    }
 	redraw();
 }
 
 /**
 * Creates a canvas element, loads images, adds events, and draws the canvas for the first time.
 */
-var prepareCanvas = function(doodleRID)
+var prepareCanvas = function(doodleRID, history)
 {
     //nest into DOM canvasDiv > editDiv > canvas, link ...
     var editDiv = document.createElement('div');
@@ -103,6 +112,7 @@ var prepareCanvas = function(doodleRID)
 	canvas.setAttribute('height', canvasHeight);
 	canvas.setAttribute('id', doodleRID);   //
 	
+	dHistory = history;
 	evalHistoryJson();
 	
 	//rating
@@ -256,7 +266,7 @@ var prepareCanvas = function(doodleRID)
   } //editMode
 }
 
-prepareCanvas(doodleRID);
+prepareCanvas(doodleRID, history);
 
 
 /**
