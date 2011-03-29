@@ -131,7 +131,7 @@ var prepareCanvas = function(doodleRID, history)
 	editDiv.appendChild(span);
 	
 	link = document.createElement('a');
-	link.setAttribute('href', "edit.php?id="+doodleRID);
+	link.setAttribute('href', "editDoodle.php?id="+doodleRID);
 	link.innerHTML = "edit";
 	editDiv.appendChild(link);
   }
